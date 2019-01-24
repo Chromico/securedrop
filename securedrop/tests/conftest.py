@@ -22,6 +22,7 @@ from os import path
 
 from db import db
 from journalist_app import create_app as create_journalist_app
+import models
 from source_app import create_app as create_source_app
 import utils
 
@@ -54,6 +55,14 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "pagelayout" in item.keywords:
             item.add_marker(skip_page_layout)
+
+
+@pytest.fixture
+def hardening(scope='function'):
+    hardening = models.LOGIN_HARDENING
+    models.LOGIN_HARDENING = True
+    yield
+    models.LOGIN_HARDENING = hardening
 
 
 @pytest.fixture(scope='session')
