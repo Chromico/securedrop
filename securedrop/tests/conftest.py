@@ -232,7 +232,11 @@ def _start_test_rqworker(config):
 def _stop_test_rqworker():
     rqworker_pid = _get_pid_from_file(TEST_WORKER_PIDFILE)
     if rqworker_pid:
-        os.kill(rqworker_pid, signal.SIGTERM)
+        try:
+            os.kill(rqworker_pid, signal.SIGTERM)
+        except OSError:
+            pass
+
         try:
             os.remove(TEST_WORKER_PIDFILE)
         except OSError:
